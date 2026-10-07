@@ -1,0 +1,8 @@
+node_modules/
+.sites-runtime/
+.sites-checkout/
+.vite/
+dist/
+.env
+.env.*
+.openai/

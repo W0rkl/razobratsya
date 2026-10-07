@@ -1,0 +1,4 @@
+import {useId,type SVGProps} from 'react'
+type IconProps=SVGProps<SVGSVGElement>&{size?:number}
+export function ArrowLeftIcon({size=24,...props}:IconProps){return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}><g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12H3.5"/><path d="m3 12 7 7m-7-7 7-7"/></g></svg>}
+export function CheckAllIcon({size=24,...props}:IconProps){const id=useId().replace(/:/g,'');return <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" {...props}><defs><mask id={id}><rect width="24" height="24" fill="white"/><path d="m7.5 13.5 4 4L22.25 6.75" fill="none" stroke="black" strokeWidth="4"/></mask></defs><g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m2 13.5 4 4L16.75 6.75" mask={'url(#'+id+')'}/><path d="m7.5 13.5 4 4L22.25 6.75"/></g></svg>}
