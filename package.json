@@ -9,7 +9,8 @@
     "build":"node node_modules/vite/bin/vite.js build",
     "build:github":"node node_modules/vite/bin/vite.js build --base /razobratsya/ --outDir docs",
     "preview:github":"node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 4173 --strictPort --base /razobratsya/ --outDir docs",
-    "typecheck":"node node_modules/typescript/bin/tsc --noEmit"
+    "typecheck":"node node_modules/typescript/bin/tsc --noEmit",
+    "test":"node --experimental-strip-types --test tests/course.test.ts"
   },
   "dependencies":{
     "react":"19.2.6",
