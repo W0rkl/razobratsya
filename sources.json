@@ -1,13 +1,146 @@
 [
-  {"id":"market","title":"sba: исследование рынка","url":"https://legacy.sba.gov/business-guide/plan-your-business/market-research-competitive-analysis","checked_at":"2026-10-08","supports":"роли спроса, альтернатив, цен и прямого исследования клиентов","limits":"общая методика; примеры предложений, воронок и опытов авторские, конкретный рынок не исследован"},
-  {"id":"observe","title":"y combinator: наблюдение за пользователем","url":"https://www.ycombinator.com/blog/practical-design-user-observation/","checked_at":"2026-10-08","supports":"выбор цели наблюдения, различие пользователя и покупателя, наблюдение за задачей","limits":"методический материал 2016 года, не статистика спроса; истории курса вымышлены"},
-  {"id":"money","title":"sba: точка безубыточности","url":"https://legacy.sba.gov/business-guide/plan-your-business/calculate-your-startup-costs/break-even-point","checked_at":"2026-10-08","supports":"разделение расходов и формула постоянные расходы / (цена − переменные расходы)","limits":"модель одной услуги с фиксированными условиями; арифметические сценарии курса авторские, налоги и индивидуальные обязательства не рассчитаны"},
-  {"id":"nist","title":"nist: генеративный ии","url":"https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf","checked_at":"2026-10-08","supports":"возможность убедительных ошибочных результатов и необходимость оценки в контексте применения","limits":"профиль рисков 2024 года; не рейтинг моделей, не доказательство каждого учебного приёма"},
-  {"id":"code","title":"github: изучение проекта с помощником","url":"https://docs.github.com/en/copilot/tutorials/explore-a-codebase","checked_at":"2026-10-08","supports":"изучение структуры, команд и потока данных с помощью вопросов о репозитории","limits":"документация copilot; поручения и критерии приёмки составлены самостоятельно для общего процесса разработки"},
-  {"id":"git","title":"github: git","url":"https://docs.github.com/en/get-started/using-git/about-git","checked_at":"2026-10-08","supports":"история изменений, commits и branches","limits":"не доказывает правильность кода и не означает публикацию сайта"},
-  {"id":"web","title":"mdn: клиент и сервер","url":"https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/First_steps/Client-Server_overview","checked_at":"2026-10-08","supports":"обмен запросами/ответами, серверная обработка и данные","limits":"типовая схема веб-приложения; архитектурные решения учебных случаев авторские"},
-  {"id":"http","title":"mdn: обзор http","url":"https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview","checked_at":"2026-10-08","supports":"запросы, ответы и сообщения http","limits":"конкретные адреса, лимиты, цены и семантика повторов задаются документацией выбранного api; json задания 17 в курсе вымышленный"},
-  {"id":"storage","title":"mdn: localstorage","url":"https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage","checked_at":"2026-10-08","supports":"сохранение между посещениями, область браузера/сайта и возможный отказ доступа","limits":"не синхронизация устройств и не серверная граница доступа; курсовой progress хранит только ответы и отметки"},
-  {"id":"pages","title":"github: pages","url":"https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages","checked_at":"2026-10-08","supports":"статический хостинг html, css и javascript из репозитория","limits":"не запускает отдельный backend; проверка поведения после выкладки выполняется отдельно"},
-  {"id":"uncertainty","title":"ons: неопределённость опросов","url":"https://www.ons.gov.uk/methodology/methodologytopicsandstatisticalconcepts/uncertaintyandhowwemeasureit","checked_at":"2026-10-08","supports":"границы выборочных оценок, отбор, отказы и неточность ответов","limits":"не данные рынка этого курса; числовые случаи и рассуждения об альтернативных причинах составлены самостоятельно"}
+  {
+    "id": "market",
+    "title": "sba: исследование рынка",
+    "url": "https://legacy.sba.gov/business-guide/plan-your-business/market-research-competitive-analysis",
+    "checked_at": "2026-10-08",
+    "supports": "роли спроса, альтернатив, цен и прямого исследования клиентов",
+    "limits": "общая методика; примеры предложений, воронок и опытов авторские, конкретный рынок не исследован"
+  },
+  {
+    "id": "observe",
+    "title": "y combinator: наблюдение за пользователем",
+    "url": "https://www.ycombinator.com/blog/practical-design-user-observation/",
+    "checked_at": "2026-10-08",
+    "supports": "выбор цели наблюдения, различие пользователя и покупателя, наблюдение за задачей",
+    "limits": "методический материал 2016 года, не статистика спроса; истории курса вымышлены"
+  },
+  {
+    "id": "money",
+    "title": "sba: точка безубыточности",
+    "url": "https://legacy.sba.gov/business-guide/plan-your-business/calculate-your-startup-costs/break-even-point",
+    "checked_at": "2026-10-08",
+    "supports": "разделение расходов и формула постоянные расходы / (цена − переменные расходы)",
+    "limits": "модель одной услуги с фиксированными условиями; арифметические сценарии курса авторские, налоги и индивидуальные обязательства не рассчитаны"
+  },
+  {
+    "id": "nist",
+    "title": "nist: генеративный ии",
+    "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+    "checked_at": "2026-10-08",
+    "supports": "возможность убедительных ошибочных результатов и необходимость оценки в контексте применения",
+    "limits": "профиль рисков 2024 года; не рейтинг моделей, не доказательство каждого учебного приёма"
+  },
+  {
+    "id": "code",
+    "title": "github: изучение проекта с помощником",
+    "url": "https://docs.github.com/en/copilot/tutorials/explore-a-codebase",
+    "checked_at": "2026-10-08",
+    "supports": "изучение структуры, команд и потока данных с помощью вопросов о репозитории",
+    "limits": "документация copilot; поручения и критерии приёмки составлены самостоятельно для общего процесса разработки"
+  },
+  {
+    "id": "git",
+    "title": "github: git",
+    "url": "https://docs.github.com/en/get-started/using-git/about-git",
+    "checked_at": "2026-10-08",
+    "supports": "история изменений, commits и branches",
+    "limits": "не доказывает правильность кода и не означает публикацию сайта"
+  },
+  {
+    "id": "web",
+    "title": "mdn: клиент и сервер",
+    "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/First_steps/Client-Server_overview",
+    "checked_at": "2026-10-08",
+    "supports": "обмен запросами/ответами, серверная обработка и данные",
+    "limits": "типовая схема веб-приложения; архитектурные решения учебных случаев авторские"
+  },
+  {
+    "id": "http",
+    "title": "mdn: обзор http",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview",
+    "checked_at": "2026-10-08",
+    "supports": "запросы, ответы и сообщения http",
+    "limits": "конкретные адреса, лимиты, цены и семантика повторов задаются документацией выбранного api; json учебного задания в курсе вымышленный"
+  },
+  {
+    "id": "storage",
+    "title": "mdn: localstorage",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage",
+    "checked_at": "2026-10-08",
+    "supports": "сохранение между посещениями, область браузера/сайта и возможный отказ доступа",
+    "limits": "не синхронизация устройств и не серверная граница доступа; курсовой progress хранит только ответы и отметки"
+  },
+  {
+    "id": "pages",
+    "title": "github: pages",
+    "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages",
+    "checked_at": "2026-10-08",
+    "supports": "статический хостинг html, css и javascript из репозитория",
+    "limits": "не запускает отдельный backend; проверка поведения после выкладки выполняется отдельно"
+  },
+  {
+    "id": "uncertainty",
+    "title": "ons: неопределённость опросов",
+    "url": "https://www.ons.gov.uk/methodology/methodologytopicsandstatisticalconcepts/uncertaintyandhowwemeasureit",
+    "checked_at": "2026-10-08",
+    "supports": "границы выборочных оценок, отбор, отказы и неточность ответов",
+    "limits": "не данные рынка этого курса; числовые случаи и рассуждения об альтернативных причинах составлены самостоятельно"
+  },
+  {
+    "id": "rich-dad",
+    "title": "роберт кийосаки: rich dad poor dad",
+    "url": "https://richdad.com/products/books/rich-dad-poor-dad/",
+    "supports": "атрибуция книги и общая тема финансового образования; сайт автора",
+    "limits": "использованы отдельные идеи, не полный текст; примеры и задания оригинальные. бытовая оценка потока не подменяет бухгалтерское определение актива",
+    "checked_at": "2026-10-08"
+  },
+  {
+    "id": "rich-dad-education",
+    "title": "rich dad: финансовое образование",
+    "url": "https://richdad.com/financial-education/",
+    "supports": "общая постановка вопросов о потоке, источниках поступлений и финансовых знаниях",
+    "limits": "маркетинговые обобщения о долге, налогах, стоимости жилья и гарантированном доходе не принимаются как универсальные правила",
+    "checked_at": "2026-10-08"
+  },
+  {
+    "id": "cialdini-books",
+    "title": "роберт чалдини: influence",
+    "url": "https://cialdini.com/books",
+    "supports": "авторство, названия и различие классического и расширенного издания",
+    "limits": "не заявляется прочтение полного издания; учебные разговоры и сценарии составлены самостоятельно",
+    "checked_at": "2026-10-08"
+  },
+  {
+    "id": "cialdini-principles",
+    "title": "influence at work: семь принципов",
+    "url": "https://www.influenceatwork.com/7-principles-of-persuasion/",
+    "supports": "названия и общий смысл взаимности, последовательности, расположения, единства, авторитета, социального доказательства и дефицита",
+    "limits": "не гарантии согласия и не доказательство эффективности конкретного объявления; оригинальные сценарии не описываются как исследования чалдини",
+    "checked_at": "2026-10-08"
+  },
+  {
+    "id": "sugarman",
+    "title": "джозеф шугерман: как создать крутой рекламный текст",
+    "url": "https://alpinabook.ru/catalog/book-kak-sozdat-krutoy-reklamnyy-tekst/",
+    "supports": "авторство и название; мысль о переходе от первого предложения к следующему из описания издателя",
+    "limits": "использовано описание издателя, не полный текст книги; порядок составления объявлений, примеры и опыты авторские",
+    "checked_at": "2026-10-08"
+  },
+  {
+    "id": "ifrs",
+    "title": "ifrs: conceptual framework project summary",
+    "url": "https://www.ifrs.org/content/dam/ifrs/project/conceptual-framework/fact-sheet-project-summary-and-feedback-statement/conceptual-framework-project-summary.pdf",
+    "supports": "различие ресурса-актива и обязанности-обязательства",
+    "limits": "рамка финансовой отчётности; не инструкция по налоговому учёту пользователя",
+    "checked_at": "2026-10-08"
+  },
+  {
+    "id": "cfpb-reserve",
+    "title": "cfpb: emergency fund",
+    "url": "https://www.consumerfinance.gov/an-essential-guide-to-building-an-emergency-fund/",
+    "supports": "назначение резерва и различие времени поступлений и расходов",
+    "limits": "общая финансовая грамотность; американские банковские и правовые детали не переносятся. суммы, сроки и сценарии курса вымышленные",
+    "checked_at": "2026-10-08"
+  }
 ]

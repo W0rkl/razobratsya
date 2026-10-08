@@ -1,15 +1,17 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import {lessons} from '../src/data/curriculum.ts'
+import {programBlocks,blocksForTopic,blockForLesson} from '../src/data/program.ts'
 import {progressKey,decodeProgress,loadProgress,saveProgress,emptyEntry,isComplete} from '../src/data/progress.ts'
 
-test('18 lessons cover six modules and have usable tasks, explanations and quizzes',()=>{
-  assert.equal(lessons.length,18)
-  assert.equal(new Set(lessons.map(l=>l.id)).size,18)
-  assert.equal(new Set(lessons.map(l=>l.topic+'/'+l.slug)).size,18)
-  for(const topic of ['sales','vibe-code','money','technology','opportunities','thinking'])assert.equal(lessons.filter(l=>l.topic===topic).length,3)
+test('30 lessons cover six topics, with deeper sales and money blocks',()=>{
+  assert.equal(lessons.length,30)
+  assert.equal(new Set(lessons.map(l=>l.id)).size,lessons.length)
+  assert.equal(new Set(lessons.map(l=>l.topic+'/'+l.slug)).size,lessons.length)
+  for(const [topic,count] of Object.entries({sales:9,'vibe-code':3,money:9,technology:3,opportunities:3,thinking:3}))assert.equal(lessons.filter(l=>l.topic===topic).length,count)
   for(const lesson of lessons){
-    assert.equal(lesson.sections.length,4,lesson.id)
+    assert.equal(lesson.sections.length,6,lesson.id)
+    assert.equal(new Set(lesson.sections.map(section=>section.title)).size,lesson.sections.length,lesson.id)
     assert.ok(lesson.sections.every(section=>section.text.length>200),lesson.id)
     assert.ok(lesson.task.steps.length>=4&&lesson.task.solution.length>100,lesson.id)
     assert.equal(lesson.questions.length,2,lesson.id)
@@ -20,6 +22,31 @@ test('18 lessons cover six modules and have usable tasks, explanations and quizz
     }
     assert.ok(lesson.sources.every(source=>new URL(source.url).protocol==='https:'),lesson.id)
   }
+})
+test('blocks form one ordered program, without missing or duplicated lessons',()=>{
+  assert.equal(programBlocks.length,10)
+  const ids=programBlocks.flatMap(block=>block.lessonIds)
+  assert.equal(new Set(ids).size,lessons.length)
+  assert.deepEqual(ids,lessons.map(lesson=>lesson.id))
+  for(const block of programBlocks){
+    assert.equal(block.lessonIds.length,3)
+    assert.ok(blocksForTopic(block.topic).includes(block))
+    for(const id of block.lessonIds){
+      const lesson=lessons.find(value=>value.id===id)!
+      assert.equal(lesson.topic,block.topic)
+      assert.equal(blockForLesson(id),block)
+    }
+  }
+  assert.equal(lessons.at(-1)?.id,'thinking-project')
+})
+test('existing lesson progress remains usable after reordering and expansion',()=>{
+  const legacyIds=['sales-client','sales-offer','sales-repeat','vibe-code-task','vibe-code-debug','vibe-code-release','money-order','money-break-even','money-cash','technology-path','technology-api','technology-choice','opportunities-change','opportunities-test','opportunities-decision','thinking-source','thinking-numbers','thinking-project']
+  const oldEntries=Object.fromEntries(legacyIds.map(id=>[id,{practice:true,answers:[0,1]}]))
+  const decoded=decodeProgress(JSON.stringify({version:1,lessons:oldEntries}),lessons)
+  assert.equal(decoded.issue,null)
+  assert.deepEqual(decoded.progress,oldEntries)
+  assert.equal(progressKey,'razobratsya-learning-v3')
+  for(const lesson of lessons.filter(item=>!legacyIds.includes(item.id)))assert.equal(decoded.progress[lesson.id],undefined)
 })
 test('completion needs practice and both correct submitted answers',()=>{
   const lesson=lessons[0],entry=emptyEntry(lesson)

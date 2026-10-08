@@ -1,10 +1,11 @@
 import {lessons} from './curriculum'
 export {lessons}
 export type {Lesson,Question} from './curriculum'
+export {programBlocks,blocksForTopic,blockForLesson} from './program'
 export const topics = [
-  {slug:'sales',title:'продажи',art:'sales.png',color:'#ff805f',description:'найди клиента, составь предложение и проверь первую и повторную продажу.',alt:'пальмы на берегу бирюзового моря на закате'},
+  {slug:'sales',title:'продажи',art:'sales.png',color:'#ff805f',description:'клиент, разговор, доверие, принципы влияния, рекламный текст и повторная продажа.',alt:'пальмы на берегу бирюзового моря на закате'},
   {slug:'vibe-code',title:'vibe code',art:'vibe-code.png',color:'#8798ff',description:'поставь задачу помощнику, найди ошибку и доведи рабочую версию до публикации.',alt:'ретро-компьютер в синем и зелёном свете'},
-  {slug:'money',title:'деньги',art:'money.png',color:'#ffcd50',description:'посчитай одну продажу, выход в ноль, доступные часы и реальные поступления.',alt:'апельсины и дольки на солнечно-жёлтом фоне'},
+  {slug:'money',title:'деньги',art:'money.png',color:'#ffcd50',description:'активы и поток, бюджет, экономика заказа, риск долга и повторяемые источники поступлений.',alt:'апельсины и дольки на солнечно-жёлтом фоне'},
   {slug:'technology',title:'технологии',art:'technology.png',color:'#50d4bd',description:'разберись с хранением, api и выбором между таблицей, сайтом и сервером.',alt:'стеклянная призма и отражения в бирюзовой воде'},
   {slug:'opportunities',title:'возможности',art:'opportunities.png',color:'#ff9caa',description:'найди изменение в новости, поставь небольшой опыт и реши, продолжать ли.',alt:'серфер на морской волне на коралловом рассвете'},
   {slug:'thinking',title:'мышление',art:'thinking.png',color:'#d4a5ff',description:'проверь источники и числа, затем собери всё в итоговую работу.',alt:'воздушные шары над горами на лиловом рассвете'},

@@ -1,10 +1,8 @@
-export type Question = { prompt:string; options:string[]; answer:number; explanation:string }
-export type Lesson = {
-  id:string; topic:string; slug:string; shortTitle:string; title:string; minutes:number;
-  lead:string; outcome:string; sections:{title:string;text:string}[];
-  example:{title:string;text:string}; task:{steps:string[];result:string;solution:string};
-  questions:Question[]; sources:{label:string;url:string}[];
-}
+import type {Lesson} from './lesson-types.ts'
+import {bookLessons,influence,copywriting,richDad} from './book-lessons.ts'
+import {workshops} from './workshops.ts'
+import {programBlocks} from './program.ts'
+export type {Lesson,Question} from './lesson-types.ts'
 const market={label:'sba: исследование рынка',url:'https://legacy.sba.gov/business-guide/plan-your-business/market-research-competitive-analysis'}
 const observe={label:'y combinator: наблюдение за пользователем',url:'https://www.ycombinator.com/blog/practical-design-user-observation/'}
 const money={label:'sba: точка безубыточности',url:'https://legacy.sba.gov/business-guide/plan-your-business/calculate-your-startup-costs/break-even-point'}
@@ -17,7 +15,7 @@ const storage={label:'mdn: хранение в браузере',url:'https://de
 const pages={label:'github: что умеет pages',url:'https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages'}
 const uncertainty={label:'ons: выборка и неопределённость',url:'https://www.ons.gov.uk/methodology/methodologytopicsandstatisticalconcepts/uncertaintyandhowwemeasureit'}
 
-export const lessons:Lesson[]=[
+const foundationLessons:Lesson[]=[
   {
     id:'sales-client',topic:'sales',slug:'client',shortTitle:'найти задачу клиента',title:'кому ты нужен и за что тебе заплатят',minutes:12,
     lead:'начни с работы, которую человек уже делает. приложение, таблица и ручная услуга могут решать одну задачу. сначала нужно понять саму задачу.',
@@ -271,3 +269,16 @@ export const lessons:Lesson[]=[
     questions:[{prompt:'что должно быть в итоговом выводе?',options:['только обещание большого рынка','наблюдения, происхождение чисел, ограничения и следующий шаг','только список технологий'],answer:1,explanation:'вывод должен соответствовать проверенным данным и показывать, что ещё неизвестно. обещания и названия инструментов этого не заменяют.'},{prompt:'один клиент оплатил пробу. что уже подтверждено?',options:['одна сделка на этих условиях; повторный спрос и масштаб пока проверяются','любой человек будет платить ту же цену','проект больше не требует расчёта расходов'],answer:0,explanation:'платёж подтверждает конкретную сделку. экономику выполнения, повтор и доступность других клиентов нужно проверять отдельно.'}],sources:[market,observe,money,uncertainty]
   }
 ]
+
+const expanded=foundationLessons.map(lesson=>({
+  ...lesson,
+  minutes:lesson.minutes+4,
+  sections:[...lesson.sections,...workshops[lesson.id]],
+  sources:lesson.topic==='sales'?[...lesson.sources,influence,...(lesson.id==='sales-offer'?[copywriting]:[])]:lesson.topic==='money'?[...lesson.sources,richDad]:lesson.sources
+}))
+const lessonMap=new Map([...expanded,...bookLessons].map(lesson=>[lesson.id,lesson]))
+export const lessons:Lesson[]=programBlocks.flatMap(block=>block.lessonIds.map(id=>{
+  const lesson=lessonMap.get(id)
+  if(!lesson)throw new Error('missing lesson: '+id)
+  return lesson
+}))
