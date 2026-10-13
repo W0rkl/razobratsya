@@ -3,6 +3,9 @@ import assert from 'node:assert/strict'
 import {lessons} from '../src/data/curriculum.ts'
 import {programBlocks,blocksForTopic,blockForLesson} from '../src/data/program.ts'
 import {progressKey,decodeProgress,loadProgress,saveProgress,emptyEntry,isComplete} from '../src/data/progress.ts'
+import {briefs,briefQuestion} from '../src/data/briefs.ts'
+import {scenarios} from '../src/data/scenarios.ts'
+import {studyKey,emptyStudy,emptySession,emptyCase,decodeStudy,loadStudy,saveStudy,nextSession,nextCase,resumeLesson,sessionReady,caseReady,mergeUnsaved,mergeRead} from '../src/data/study-progress.ts'
 
 test('30 lessons cover six topics, with deeper sales and money blocks',()=>{
   assert.equal(lessons.length,30)
@@ -85,4 +88,119 @@ test('denied storage never throws and memory entry can still be completed',()=>{
 test('empty and old-version storage do not invent completed lessons',()=>{
   assert.deepEqual(decodeProgress(null,lessons),{progress:{},issue:null})
   assert.deepEqual(decodeProgress('{"version":99,"lessons":{}}',lessons),{progress:{},issue:'damaged'})
+})
+
+test('every existing lesson has one small actionable brief; five scenarios have valid routes and sources',()=>{
+  assert.deepEqual(Object.keys(briefs).sort(),lessons.map(lesson=>lesson.id).sort())
+  for(const brief of Object.values(briefs))assert.ok(brief.idea.length>100&&brief.prompt.length>30&&brief.placeholder.length>20)
+  assert.equal(scenarios.length,5)
+  assert.equal(new Set(scenarios.map(item=>item.id)).size,5)
+  for(const scenario of scenarios){
+    assert.ok(lessons.some(lesson=>lesson.id===scenario.related&&lesson.topic===scenario.topic))
+    assert.ok(scenario.options.length>=2&&scenario.choices.length>=2)
+    assert.ok(scenario.news.length>100&&scenario.takeaway.length>150)
+    assert.ok(scenario.options.every(option=>option.feedback.length>60))
+    assert.ok(scenario.sources.every(source=>new URL(source.url).protocol==='https:'))
+  }
+})
+test('short session preserves its note and stage and never completes the full lesson',()=>{
+  const lesson=lessons[0]
+  let study=nextSession(emptyStudy(),lesson.id,{step:1,note:'проверю последний случай клиента'})
+  study=nextSession(study,lesson.id,{step:2})
+  assert.equal(study.sessions[lesson.id].step,2)
+  assert.equal(sessionReady(lesson.id,study.sessions[lesson.id]),false)
+  study=nextSession(study,lesson.id,{answer:lesson.questions[0].answer,step:3})
+  assert.equal(study.sessions[lesson.id].step,3)
+  assert.equal(isComplete(lesson,emptyEntry(lesson)),false)
+  assert.equal(study.lastLesson,lesson.id)
+  assert.deepEqual(decodeStudy(JSON.stringify({version:1,...study})).study,study)
+})
+test('blank notes and wrong answers cannot become finished short sessions',()=>{
+  const lesson=lessons[0]
+  const noNote=nextSession(emptyStudy(),lesson.id,{step:3,answer:lesson.questions[0].answer})
+  assert.equal(noNote.sessions[lesson.id].step,1)
+  const wrong=nextSession(emptyStudy(),lesson.id,{step:3,note:'проверю последний случай',answer:(lesson.questions[0].answer+1)%lesson.questions[0].options.length})
+  assert.equal(wrong.sessions[lesson.id].step,2)
+  assert.equal(sessionReady(lesson.id,wrong.sessions[lesson.id]),false)
+})
+test('home resumes the last unfinished selected topic, then finds another step',()=>{
+  const lesson=lessons.find(item=>item.topic==='technology')!
+  let study=nextSession(emptyStudy(),lesson.id,{step:1,note:'уточню путь заявки'})
+  assert.equal(resumeLesson(study).id,lesson.id)
+  study=nextSession(study,lesson.id,{step:3,answer:briefQuestion(lesson).answer})
+  assert.equal(resumeLesson(study).id,lessons[0].id)
+  assert.equal(resumeLesson(emptyStudy(),[lessons[0].id]).id,lessons[1].id)
+})
+test('scenario completion requires two decisions and a note; unfinished data survives reload',()=>{
+  const scenario=scenarios[0]
+  let study=nextCase(emptyStudy(),scenario.id,{first:1,note:'проверю время согласования'})
+  assert.equal(caseReady(scenario.id,study.cases[scenario.id]),false)
+  study=nextCase(study,scenario.id,{done:true})
+  assert.equal(study.cases[scenario.id].done,false)
+  study=nextCase(study,scenario.id,{second:2,done:true})
+  assert.equal(study.cases[scenario.id].done,true)
+  assert.deepEqual(decodeStudy(JSON.stringify({version:1,...study})).study,study)
+})
+test('damaged study keeps valid records and rejects unsupported stages, indices and oversized notes',()=>{
+  const a=lessons[0],b=lessons[1],scenario=scenarios[0]
+  const raw=JSON.stringify({version:1,lastLesson:b.id,sessions:{[a.id]:{...emptySession(),step:99},[b.id]:{...emptySession(),step:1,note:'одна полезная запись'}},cases:{[scenario.id]:{...emptyCase(),second:99}}})
+  const loaded=decodeStudy(raw)
+  assert.equal(loaded.issue,'damaged')
+  assert.equal(loaded.study.sessions[a.id],undefined)
+  assert.equal(loaded.study.sessions[b.id].note,'одна полезная запись')
+  assert.equal(loaded.study.cases[scenario.id],undefined)
+  assert.equal(nextSession(emptyStudy(),a.id,{note:'x'.repeat(2001)}).sessions[a.id],undefined)
+  assert.equal(decodeStudy('{').issue,'damaged')
+  assert.equal(decodeStudy('null').issue,'damaged')
+  assert.equal(decodeStudy('{"version":99}').issue,'damaged')
+  assert.deepEqual(nextSession(emptyStudy(),'unknown',{step:1}),emptyStudy())
+})
+test('study storage is separate from legacy progress, and denied storage leaves a usable memory snapshot',()=>{
+  const legacy=JSON.stringify({version:1,lessons:{[lessons[0].id]:emptyEntry(lessons[0])}})
+  const data=new Map([[progressKey,legacy]])
+  const store={getItem:(key:string)=>data.get(key)??null,setItem:(key:string,value:string)=>{data.set(key,value)}}
+  const study=nextSession(emptyStudy(),lessons[0].id,{note:'моя небольшая запись',step:1})
+  assert.notEqual(studyKey,progressKey)
+  assert.equal(saveStudy(store,study),true)
+  assert.equal(data.get(progressKey),legacy)
+  assert.deepEqual(loadStudy(store).study,study)
+  const denied={getItem:()=>{throw Error('denied')},setItem:()=>{throw Error('quota')}}
+  assert.equal(loadStudy(denied).issue,'unavailable')
+  assert.equal(saveStudy(denied,study),false)
+  assert.equal(study.sessions[lessons[0].id].note,'моя небольшая запись')
+})
+test('unsaved draft survives cross-tab storage events while unrelated saved changes are accepted',()=>{
+  const a=lessons[0],b=lessons[1]
+  const memory=nextSession(emptyStudy(),a.id,{step:1,note:'несохранённая запись в первой вкладке'})
+  let latest=nextSession(emptyStudy(),a.id,{note:'старый сохранённый текст'})
+  latest=nextSession(latest,b.id,{step:1,note:'новая запись из другой вкладки'})
+  const merged=mergeUnsaved(latest,memory,{sessions:new Set([a.id]),cases:new Set(),lastLesson:true})
+  assert.equal(merged.sessions[a.id].note,memory.sessions[a.id].note)
+  assert.equal(merged.sessions[b.id].note,latest.sessions[b.id].note)
+  assert.equal(merged.lastLesson,a.id)
+  assert.equal(mergeUnsaved(emptyStudy(),memory,{sessions:new Set([a.id]),cases:new Set(),lastLesson:true}).sessions[a.id].note,memory.sessions[a.id].note)
+})
+test('selected short question uses matching acceptance rules without changing full questions',()=>{
+  const release=lessons.find(lesson=>lesson.id==='vibe-code-release')!
+  const question=briefQuestion(release)
+  assert.equal(question,release.questions[1])
+  assert.match(question.prompt,/публикация/)
+  const complete=nextSession(emptyStudy(),release.id,{step:3,note:'проверю форму после публикации',answer:question.answer})
+  assert.equal(complete.sessions[release.id].step,3)
+  assert.deepEqual(decodeStudy(JSON.stringify({version:1,...complete})).study,complete)
+  assert.equal(sessionReady(release.id,{step:2,note:'проверю форму после публикации',answer:(question.answer+1)%question.options.length}),false)
+  for(const lesson of lessons)assert.ok(briefQuestion(lesson))
+})
+test('read access denied after a successful load keeps all known records before a new update',()=>{
+  const a=lessons[0],b=lessons[1]
+  let memory=nextSession(emptyStudy(),a.id,{step:1,note:'раньше сохранённая заметка'})
+  memory=nextSession(memory,b.id,{step:1,note:'сохранённая другая тема'})
+  memory=nextCase(memory,scenarios[0].id,{first:1,note:'другая сохранённая ситуация'})
+  const merged=mergeRead({study:emptyStudy(),issue:'unavailable'},memory,{sessions:new Set(),cases:new Set(),lastLesson:false})
+  assert.deepEqual(merged,memory)
+  const changed=nextSession(merged,a.id,{step:2})
+  assert.equal(changed.sessions[a.id].step,2)
+  assert.equal(changed.sessions[a.id].note,memory.sessions[a.id].note)
+  assert.deepEqual(changed.sessions[b.id],memory.sessions[b.id])
+  assert.deepEqual(changed.cases,memory.cases)
 })
