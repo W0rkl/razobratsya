@@ -2,6 +2,7 @@ import type {Lesson} from './lesson-types.ts'
 import {bookLessons,influence,copywriting,richDad} from './book-lessons.ts'
 import {workshops} from './workshops.ts'
 import {programBlocks} from './program.ts'
+import {salesChapters} from './sales-chapters.ts'
 export type {Lesson,Question} from './lesson-types.ts'
 const market={label:'sba: исследование рынка',url:'https://legacy.sba.gov/business-guide/plan-your-business/market-research-competitive-analysis'}
 const observe={label:'y combinator: наблюдение за пользователем',url:'https://www.ycombinator.com/blog/practical-design-user-observation/'}
@@ -280,5 +281,5 @@ const lessonMap=new Map([...expanded,...bookLessons].map(lesson=>[lesson.id,less
 export const lessons:Lesson[]=programBlocks.flatMap(block=>block.lessonIds.map(id=>{
   const lesson=lessonMap.get(id)
   if(!lesson)throw new Error('missing lesson: '+id)
-  return lesson
+  return salesChapters[id]?{...lesson,...salesChapters[id]}:lesson
 }))

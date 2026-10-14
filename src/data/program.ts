@@ -1,7 +1,7 @@
 export type ProgramBlock={topic:string;slug:string;title:string;description:string;lessonIds:string[]}
 export const programBlocks:ProgramBlock[]=[
-  {topic:'sales',slug:'understand',title:'клиент, разговор и доверие',description:'разобраться в работе человека и собрать доказательства под своё предложение.',lessonIds:['sales-client','sales-conversation','sales-trust']},
-  {topic:'sales',slug:'agreement',title:'влияние и договорённость',description:'предложить добровольную пробу, объяснить ограничения и согласовать условия.',lessonIds:['sales-influence','sales-urgency','sales-offer']},
+  {topic:'sales',slug:'understand',title:'решение покупателя и разговор',description:'понять механику покупки, научиться задавать вопросы и подбирать доказательства.',lessonIds:['sales-client','sales-conversation','sales-trust']},
+  {topic:'sales',slug:'agreement',title:'презентация, сомнения и условия',description:'показать пользу, разобрать возражения и согласовать конкретное предложение.',lessonIds:['sales-influence','sales-urgency','sales-offer']},
   {topic:'sales',slug:'text',title:'текст, проверка и повторная продажа',description:'написать объявление, проверить понимание и передать полезный результат.',lessonIds:['sales-copy','sales-copy-test','sales-repeat']},
   {topic:'vibe-code',slug:'build',title:'задача, ошибка и выпуск',description:'работать с помощником короткими проверяемыми изменениями.',lessonIds:['vibe-code-task','vibe-code-debug','vibe-code-release']},
   {topic:'money',slug:'foundation',title:'картина денег',description:'различать имущество, поток, личные выплаты и экономику заказа.',lessonIds:['money-map','money-budget','money-order']},

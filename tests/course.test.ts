@@ -6,6 +6,7 @@ import {progressKey,decodeProgress,loadProgress,saveProgress,emptyEntry,isComple
 import {briefs,briefQuestion} from '../src/data/briefs.ts'
 import {scenarios} from '../src/data/scenarios.ts'
 import {studyKey,emptyStudy,emptySession,emptyCase,decodeStudy,loadStudy,saveStudy,nextSession,nextCase,resumeLesson,sessionReady,caseReady,mergeUnsaved,mergeRead} from '../src/data/study-progress.ts'
+import {fullReadingMode,modeSuffix} from '../src/data/reading-mode.ts'
 
 test('30 lessons cover six topics, with deeper sales and money blocks',()=>{
   assert.equal(lessons.length,30)
@@ -203,4 +204,22 @@ test('read access denied after a successful load keeps all known records before 
   assert.equal(changed.sessions[a.id].note,memory.sessions[a.id].note)
   assert.deepEqual(changed.sessions[b.id],memory.sessions[b.id])
   assert.deepEqual(changed.cases,memory.cases)
+})
+test('ordinary and legacy sales URLs show full explanation; short mode is explicit and round-trips',()=>{
+  assert.equal(fullReadingMode('?topic=sales&lesson=client'),true)
+  assert.equal(fullReadingMode('?topic=sales&lesson=client&mode=full'),true)
+  assert.equal(fullReadingMode('?topic=sales&mode=unknown'),true)
+  assert.equal(fullReadingMode('?topic=sales&lesson=client&mode=short'),false)
+  assert.equal(fullReadingMode('?topic=money'+modeSuffix(false)),false)
+  assert.equal(fullReadingMode('?topic=money'+modeSuffix(true)),true)
+})
+test('reframed sales examples keep historic answer meanings at the same stored positions',()=>{
+  const historicAnswers:Record<string,number[]>={'sales-client':[1,2],'sales-conversation':[1,2],'sales-trust':[1,0],'sales-influence':[2,0],'sales-urgency':[2,1],'sales-offer':[1,1],'sales-copy':[0,1],'sales-copy-test':[1,2],'sales-repeat':[0,1]}
+  const stored=Object.fromEntries(Object.entries(historicAnswers).map(([id,answers])=>[id,{answers,practice:true}]))
+  const decoded=decodeProgress(JSON.stringify({version:1,lessons:stored}),lessons)
+  assert.equal(decoded.issue,null)
+  for(const lesson of lessons.filter(item=>item.topic==='sales')){
+    assert.deepEqual(lesson.questions.map(question=>question.answer),historicAnswers[lesson.id])
+    assert.equal(isComplete(lesson,decoded.progress[lesson.id]),true)
+  }
 })

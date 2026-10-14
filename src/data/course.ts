@@ -3,7 +3,7 @@ export {lessons}
 export type {Lesson,Question} from './curriculum'
 export {programBlocks,blocksForTopic,blockForLesson} from './program'
 export const topics = [
-  {slug:'sales',title:'продажи',art:'sales.png',color:'#ff805f',description:'клиент, разговор, доверие, принципы влияния, рекламный текст и повторная продажа.',alt:'пальмы на берегу бирюзового моря на закате'},
+  {slug:'sales',title:'продажи',art:'sales.png',color:'#ff805f',description:'девять связанных глав: решение покупателя, разговор, доверие, показ пользы, сомнения, цена, текст, проверка и повтор.',alt:'пальмы на берегу бирюзового моря на закате'},
   {slug:'vibe-code',title:'vibe code',art:'vibe-code.png',color:'#8798ff',description:'поставь задачу помощнику, найди ошибку и доведи рабочую версию до публикации.',alt:'ретро-компьютер в синем и зелёном свете'},
   {slug:'money',title:'деньги',art:'money.png',color:'#ffcd50',description:'активы и поток, бюджет, экономика заказа, риск долга и повторяемые источники поступлений.',alt:'апельсины и дольки на солнечно-жёлтом фоне'},
   {slug:'technology',title:'технологии',art:'technology.png',color:'#50d4bd',description:'разберись с хранением, api и выбором между таблицей, сайтом и сервером.',alt:'стеклянная призма и отражения в бирюзовой воде'},
